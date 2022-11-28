@@ -57,6 +57,12 @@
 <title>로그인</title>
 </head>
 <body>
+
+	<div>
+		<a href = "<%=request.getContextPath()%>/admin/noticeList.jsp">게시판관리자</a>
+	</div>	
+
+	
 	<!-- 공지(5개) 페이징 -->
 	<div class = "container mt-3" style= "width:400px;">
 		<table class = "table">
@@ -137,5 +143,6 @@
 			<a href="<%=request.getContextPath()%>/insertMemberForm.jsp">회원가입</a>
 		</div>
 	</div>
+	
 </body>
 </html>

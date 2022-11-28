@@ -98,4 +98,28 @@ public class CashDao {
 		conn.close();
 		return list;
 	}
+	
+	
+	// insertCashList
+	public int insertCashList(String loginMemberId, int categoryNo, long cashPrice, String cashDate, String cashMemo) throws Exception{
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		String sql = "INSERT INTO cash(member_id, category_no, cash_price, cash_date, cash_memo, updatedate, createdate) VALUES (?, ?, ?, ?, ?, CURDATE(), CURDATE())";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setString(1, loginMemberId);
+		stmt.setInt(2, categoryNo);
+		stmt.setLong(3, cashPrice);
+		stmt.setString(4, cashDate);
+		stmt.setString(5, cashMemo);
+		
+		int row = stmt.executeUpdate();
+		// 성공하면 1 실패하면 0
+		if(row == 1) {
+			return 1;
+		}else {
+			return 0;
+		}
+			
+	}
+		
 }

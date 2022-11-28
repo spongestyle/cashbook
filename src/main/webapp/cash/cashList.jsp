@@ -89,6 +89,11 @@
 </head>
 <body>
 	<div>
+		<a href = "<%=request.getContextPath()%>/admin/noticeList.jsp">관리자</a>
+	</div>	
+
+
+	<div>
 	   <!-- 로그인 정보(세션 loginMember 변수) 출력 -->
 	   <span><%=loginMemberName%>님의 가계부</span>
 	   <a href = "<%=request.getContextPath()%>/updateMemberPw.jsp">비밀번호 수정</a>

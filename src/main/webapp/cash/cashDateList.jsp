@@ -14,15 +14,30 @@
 		return;
 	}
 	
+	// 현재 로그인한 사람 세션
 	Member loginMember = (Member)session.getAttribute("loginMember");
-
-
+	String loginMemberId = loginMember.getMemberId();
+	String loginMemberName = loginMember.getMemberName();
 	
-	// 날짜넣기
-	int year = 0;
-	int month = 0;
-	int date = 0;
+	// 방어코드 - 일자 안 눌렀으면 오늘 날짜가 있는 가계부로
+	if(request.getParameter("year") == null || request.getParameter("year").equals("")
+		|| request.getParameter("month") == null || request.getParameter("month").equals("")
+		|| request.getParameter("date") == null || request.getParameter("date").equals("")){
+		response.sendRedirect(request.getContextPath()+"/cash/cashList.jsp");
+		return;
+	}
+
+	System.out.println("중간 확인");
 	
+	//날짜넣기
+	int year = Integer.parseInt(request.getParameter("year"));
+	int month = Integer.parseInt(request.getParameter("month"));
+	int date = Integer.parseInt(request.getParameter("date"));
+	
+	// 디버깅
+	System.out.println(year+"년");
+	System.out.println(month+"월");
+	System.out.println(date+"일");
 
 	
 	// Model 호출
@@ -70,12 +85,17 @@
 </head>
 <body>
 
-	<!--  cash 입력폼 -->
+	<!--  insert cash 입력폼 -->
+	
 	<div class = "container mt-3" style= "width:400px;">
 		<h2>가계부 상세보기</h2>
 		
 		<form action= "<%=request.getContextPath() %>/cash/insertCashAction.jsp" method = "post" >
 			<input type="hidden" name="memberId" value="<%=loginMember.getMemberId()%>">
+			<!-- 입력 후 해당 날짜 상세페이지로 가려고 -->
+			<input type="hidden" name="year" value="<%=year%>">
+			<input type="hidden" name="month" value="<%=month%>">
+			<input type="hidden" name="date" value="<%=date%>">
 			<table border ="1">
 				<tr>
 					<td>categoryNo</td>
@@ -138,12 +158,16 @@
 					if(Integer.parseInt(cashDate.substring(0,4)) == year && Integer.parseInt(cashDate.substring(5,7)) == month && Integer.parseInt(cashDate.substring(8)) == date ) {
 				%>
 					<tr>
-						<td><%=m.get("categoryKind") %></td>
-						<td><%=m.get("categoryName") %></td>
-						<td><%=m.get("cashPrice") %></td>
-						<td><%=m.get("cashMemo") %></td>
-						<td><a href="<%=request.getContextPath()%>/cash/updateCashForm.jsp">수정</a></td>
-						<td><a href="<%=request.getContextPath()%>/cash/deleteCashForm.jsp">삭제</a></td>
+						<td><%=(String)m.get("categoryKind")%></td>
+						<td><%=(String)m.get("categoryName") %></td>
+						<td><%=(String)m.get("cashPrice") %></td>
+						<td><%=(String)m.get("cashMemo") %></td>
+						<%
+							int cashNo = (Integer)m.get("cashNo");
+						System.out.println(cashNo + "<--캐시번호");
+						%>
+						<td><a href="<%=request.getContextPath()%>/cash/updateCashForm.jsp?cashNo=<%=cashNo%>&year=<%=year%>&month=<%=month%>&date=<%=date%>">수정</a></td>
+						<td><a href="<%=request.getContextPath()%>/cash/deleteCash.jsp?cashNo=<%=cashNo%>&year=<%=year%>&month=<%=month%>&date=<%=date%>">삭제</a></td>
 					</tr>
 					<%
 					}
