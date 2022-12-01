@@ -89,7 +89,7 @@
 </head>
 <body>
 	<div>
-		<a href = "<%=request.getContextPath()%>/admin/noticeList.jsp">관리자</a>
+		<a href = "<%=request.getContextPath()%>/admin/adminMain.jsp">관리자페이지</a>
 	</div>	
 
 
@@ -172,6 +172,10 @@
 				}
 			%>
 		</div>
+	</div>
+	<div>
+		<jsp:include page = "/inc/footer.jsp" ></jsp:include>
+	
 	</div>
 </body>
 </html>

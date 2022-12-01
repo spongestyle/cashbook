@@ -7,11 +7,18 @@
 <%
 	//한글
 	
+	Member loginMember = (Member)session.getAttribute("loginMember");
+	if(loginMember == null || loginMember.getMemberLevel() < 1){
+		response.sendRedirect(request.getContextPath()+"/loginForm.jsp");
+		return;
+	}
+ 
+	
 	request.setCharacterEncoding("utf-8");
 	String msg = null;
 	if(request.getParameter("noticeMemo") == null || request.getParameter("noticeMemo").equals("")) {
 		msg = URLEncoder.encode("항목을 입력하세요","utf-8");
-		response.sendRedirect(request.getContextPath()+"/admin/noticeList.jsp?msg="+msg);
+		response.sendRedirect(request.getContextPath()+"/admin/notice/noticeList.jsp?msg="+msg);
 		return;
 	}
 
@@ -32,5 +39,5 @@
 		
 	}
 	
-	response.sendRedirect(request.getContextPath()+"/admin/noticeList.jsp");
+	response.sendRedirect(request.getContextPath()+"/admin/notice/noticeList.jsp");
 %>

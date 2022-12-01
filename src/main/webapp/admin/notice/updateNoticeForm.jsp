@@ -4,15 +4,15 @@
 <%@ page import="vo.*"%>
 <%
 	// 1 Controller
-	// 관리자모드 로그인 세션
-	/*Member loginMember = (Member)session.getAttribute("loginMember");
-	
-	if(loginMember == null||loginMember.getMemberLevel() < 1){
+	// 로긴메서드에서 회원불러오기
+	 
+	Member loginMember = (Member)session.getAttribute("loginMember");
+	if(loginMember == null || loginMember.getMemberLevel() < 1){
 		response.sendRedirect(request.getContextPath()+"/loginForm.jsp");
 		return;
-	} 
-	System.out.println("관리자모드");
-	*/
+	}
+	 
+	
 	
 	//한글
 	request.setCharacterEncoding("UTF-8");
@@ -24,14 +24,14 @@
 	// 방어코드
 	if(request.getParameter("noticeNo")== null || request.getParameter("noticeNo").equals("")){
 		msg = URLEncoder.encode("오류입니다.", "utf-8");
-		response.sendRedirect(request.getContextPath()+"/admin/noticeList?msg="+msg);
+		response.sendRedirect(request.getContextPath()+"/admin/notice/noticeList?msg="+msg);
 		return;
 	} else {
 		noticeNo = Integer.parseInt(request.getParameter("noticeNo"));
 	}
 	if(request.getParameter("currentPage")== null || request.getParameter("currentPage").equals("")){
 		msg = URLEncoder.encode("오류입니다.", "utf-8");
-		response.sendRedirect(request.getContextPath()+"/admin/noticeList?msg="+msg);
+		response.sendRedirect(request.getContextPath()+"/admin/notice/noticeList?msg="+msg);
 		return;
 	} else {
 		currentPage = Integer.parseInt(request.getParameter("currentPage"));
@@ -54,6 +54,12 @@
 <title>Insert title here</title>
 </head>
 <body>
+	<!-- 어드민관리목록 -->
+	<div>
+		<jsp:include page = "/inc/adminUrl.jsp" ></jsp:include>
+	
+	</div>
+
 	<!-- msg 파라메타값이 있으면 출력 -->
 	<%
 		msg = request.getParameter("msg");
@@ -65,7 +71,7 @@
 	%>
 	<div>
 		<!-- notice 정보 출력 -->
-		<form action="<%=request.getContextPath()%>/admin/updateNoticeAction.jsp" method="post">
+		<form action="<%=request.getContextPath()%>/admin/notice/updateNoticeAction.jsp" method="post">
 		<input type="hidden" name="currentPage" value="<%=currentPage%>">
 		<table border="1">
 			<tr>
@@ -93,7 +99,7 @@
 				</td>
 			</tr>
 		</table>
-		<a href="<%=request.getContextPath()%>/admin/noticeList.jsp?currentPage=<%=currentPage%>">이전</a>
+		<a href="<%=request.getContextPath()%>/admin/notice/noticeList.jsp?currentPage=<%=currentPage%>">이전</a>
 		<button type="submit">수정</button>
 		</form>
 	</div>

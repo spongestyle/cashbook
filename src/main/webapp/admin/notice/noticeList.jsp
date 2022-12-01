@@ -7,9 +7,12 @@
 
 
 <%
-	// Controller
-	// 로긴메서드에서 회원불러오기
-
+	Member loginMember = (Member)session.getAttribute("loginMember");
+	if(loginMember == null || loginMember.getMemberLevel() < 1){
+		response.sendRedirect(request.getContextPath()+"/loginForm.jsp");
+		return;
+	}
+ 
 	
 	//페이징
 	
@@ -43,12 +46,11 @@
 <body>
 
 	
-	<ul>
-		<li><a href="<%=request.getContextPath()%>/admin/noticeList.jsp">공지 관리</a></li>
-		<li><a href="<%=request.getContextPath()%>/admin/categoryList.jsp">카테고리 관리</a></li>
-		<li><a href="<%=request.getContextPath()%>/admin/memberList.jsp">멤버 관리</a></li><!-- 레벨 수정, 멤버 목록, 강제 회원탈퇴 -->
-		<li><a href="<%=request.getContextPath()%>/admin/adminMain.jsp">back</a></li>
-	</ul>
+	<!-- 어드민관리목록 -->
+	<div>
+		<jsp:include page = "/inc/adminUrl.jsp" ></jsp:include>
+	
+	</div>
 	<!-- 공지목록 페이징 (상세보기 없음 타이틀만 보이게, 댓글 기능) -->
 	<div>
 		<h3><strong>★공지사항★</strong></h3>
@@ -68,8 +70,8 @@
 						<td><%=n.getNoticeMemo()%></td>
 						<td><%=n.getCreatedate()%></td>
 						<td>
-							<a href="<%=request.getContextPath()%>/admin/updateNoticeForm.jsp?noticeNo=<%=n.getNoticeNo()%>&currentPage=<%=currentPage%>">수정</a>
-							<a href="<%=request.getContextPath()%>/admin/deleteNoticeAction.jsp?noticeNo=<%=n.getNoticeNo()%>&currentPage=<%=currentPage%>">삭제</a>
+							<a href="<%=request.getContextPath()%>/admin/notice/updateNoticeForm.jsp?noticeNo=<%=n.getNoticeNo()%>&currentPage=<%=currentPage%>">수정</a>
+							<a href="<%=request.getContextPath()%>/admin/notice/deleteNoticeAction.jsp?noticeNo=<%=n.getNoticeNo()%>&currentPage=<%=currentPage%>">삭제</a>
 						</td>
 					</tr>
 			<%
@@ -79,11 +81,11 @@
 		</table>
 		
 		<!-- 공지사항 페이징 -->
-		<a href="<%=request.getContextPath()%>/admin/noticeList.jsp?currentPage=1" style="text-decoration: none;">처음</a>
+		<a href="<%=request.getContextPath()%>/admin/notice/noticeList.jsp?currentPage=1" style="text-decoration: none;">처음</a>
 			<%
 				if(currentPage > 1) {
 			%>
-					<a href="<%=request.getContextPath()%>/admin/noticeList.jsp?currentPage=<%=currentPage-1%>" style="text-decoration: none;">이전</a>
+					<a href="<%=request.getContextPath()%>/admin/notice/noticeList.jsp?currentPage=<%=currentPage-1%>" style="text-decoration: none;">이전</a>
 			<%
 				}
 			%>
@@ -91,11 +93,11 @@
 			<%
 				if(currentPage < lastPage){
 			%>
-					<a href="<%=request.getContextPath()%>/admin/noticeList.jsp?currentPage=<%=currentPage+1%>" style="text-decoration: none;">다음</a>
+					<a href="<%=request.getContextPath()%>/admin/notice/noticeList.jsp?currentPage=<%=currentPage+1%>" style="text-decoration: none;">다음</a>
 			<%		
 				}
 			%>
-		<a href="<%=request.getContextPath()%>/admin/noticeList.jsp?currentPage=<%=lastPage%>" style="text-decoration: none;">마지막</a>
+		<a href="<%=request.getContextPath()%>/admin/notice/noticeList.jsp?currentPage=<%=lastPage%>" style="text-decoration: none;">마지막</a>
 		
 		
 		
@@ -103,7 +105,7 @@
 		
 		
 		<div>
-			<a href = "<%=request.getContextPath()%>/admin/insertNoticeForm.jsp">공지입력하기</a>
+			<a href = "<%=request.getContextPath()%>/admin/notice/insertNoticeForm.jsp">공지입력하기</a>
 		</div>
 	</div>
 </body>

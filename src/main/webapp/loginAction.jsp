@@ -17,6 +17,8 @@
 	Member paramMember = new Member();	// 모델 호출 시 매개값
 	paramMember.setMemberId(memberId);
 	paramMember.setMemberPw(memberPw);
+	
+	
 	//디버깅
 	System.out.println(paramMember.getMemberId());
 	

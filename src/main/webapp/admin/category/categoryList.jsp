@@ -6,11 +6,22 @@
 <%
 	//Controller
 	// 로긴메서드에서 회원불러오기
-	Member loginMember = (Member)session.getAttribute("login");
+	/*
+	Member loginMember = (Member)session.getAttribute("loginMember");
 	if(loginMember ==null || loginMember.getMemberLevel() <1 ) {
 		
 		String msg = URLEncoder.encode("관리자만 접속가능한 페이지입니다", "utf-8");
 		response.sendRedirect(request.getContextPath()+"/loginForm.jsp");
+		return;
+	}
+	*/
+	
+	request.setCharacterEncoding("utf-8");
+	
+	Member loginMember = (Member)session.getAttribute("loginMember");
+
+	if(loginMember == null || loginMember.getMemberLevel() < 1){
+		response.sendRedirect(request.getContextPath()+"/loginForm.jsp?");
 		return;
 	}
 
@@ -31,13 +42,11 @@
 <title>category list</title>
 </head>
 <body>
-
-	<ul>
-		<li><a href="<%=request.getContextPath()%>/admin/noticeList.jsp">공지 관리</a></li>
-		<li><a href="<%=request.getContextPath()%>/admin/categoryList.jsp">카테고리 관리</a></li>
-		<li><a href="<%=request.getContextPath()%>/admin/memberList.jsp">멤버 관리</a></li><!-- 레벨 수정, 멤버 목록, 강제 회원탈퇴 -->
-		<li><a href="<%=request.getContextPath()%>/admin/adminMain.jsp">back</a></li>
-	</ul>
+	<div>
+		<jsp:include page = "/inc/adminUrl.jsp" ></jsp:include>
+	
+	</div>
+	
 		<!-- 카테고리 목록 -->
 		<div>
 			<h3><strong>카테고리 목록</strong></h3>
@@ -45,10 +54,11 @@
 				<tr>
 					<th>카테고리 번호</th>
 					<th>구분</th>
-					<th>항목</th>
+					<th>이름</th>
 					<th>생성일</th>
 					<th>수정일</th>
-					<th>편집</th>
+					<th>수정</th>
+					<th>삭제</th>
 				</tr>
 				<%
 					for(Category c : list ){
@@ -61,6 +71,8 @@
 							<td><%=c.getUpdatedate()%></td>
 							<td>
 								<a href="<%=request.getContextPath()%>/admin/category/updateCategoryForm.jsp?categoryNo=<%=c.getCategoryNo()%>">수정</a>
+							</td>
+							<td>
 								<a href="<%=request.getContextPath()%>/admin/category/deleteCategoryAction.jsp?categoryNo=<%=c.getCategoryNo()%>">삭제</a>
 							</td>
 						</tr>

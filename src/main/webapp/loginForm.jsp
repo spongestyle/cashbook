@@ -59,7 +59,7 @@
 <body>
 
 	<div>
-		<a href = "<%=request.getContextPath()%>/admin/noticeList.jsp">게시판관리자</a>
+		<a href = "<%=request.getContextPath()%>/admin/notice/noticeList.jsp">게시판관리자</a>
 	</div>	
 
 	

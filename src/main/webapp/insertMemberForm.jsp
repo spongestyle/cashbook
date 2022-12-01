@@ -78,9 +78,9 @@
 			</table>
 		
 		</form>
-	
+	<a href="<%=request.getContextPath()%>/loginForm.jsp">이전</a>
 	</div>
-
+	
 
 </body>
 </html>

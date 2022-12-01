@@ -10,26 +10,97 @@ import vo.*;
 
 public class MemberDao {
 	
-	public ArrayList<Member> selectMemberListByPage(int beginRow, int rowPerPage) throws Exception {
-		
-		/*
-		 * ORDER BY createdate DESC
-		 * 
-		 * 
-		 */
+	// 관리자 멤버레벨 수정
 	
+	public int updateMemberLevel(Member member, int memberLevel) throws Exception{
+		int row = 0;
+		// db연결
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
 		
-		return null;
+		String sql = null;
+		PreparedStatement stmt = null;
+		sql = "UPDATE member SET member_level = ?, updatedate = CURDATE() WHERE member_no = ?";
+		stmt = conn.prepareStatement(sql);
+		stmt.setInt(1, memberLevel);
+		stmt.setInt(2, member.getMemberNo());
+		row = stmt.executeUpdate();
+		
+		dbUtil.close(null, stmt, conn);
+		return row;
+	}
+	
+	// 관리자 : 멤버수
+	public int selectMemberCount() throws Exception{
+		int count = 0;
+		//db연결
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		
+		String sql = "SELECT COUNT(*) count FROM member";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			count = rs.getInt("count");
+		}
+		
+		dbUtil.close(rs, stmt, conn);
+		return count;
+	}
+
+	
+	
+	// 관리자 : 멤버리스트
+	public ArrayList<Member> selectMemberListByPage(int beginRow, int rowPerPage) throws Exception {
+		ArrayList<Member> list = new ArrayList<Member>();
+		// db연결
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		
+		String sql = "SELECT member_no memberNo, member_id memberId, member_level memberLevel, member_name memberName, updatedate, createdate"
+				+ " FROM member ORDER BY createdate DESC"
+				+ " LIMIT ?, ?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setInt(1, beginRow);
+		stmt.setInt(2, rowPerPage);
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			Member m = new Member();
+			m.setMemberNo(rs.getInt("memberNo"));
+			m.setMemberId(rs.getString("memberId"));
+			m.setMemberLevel(rs.getInt("memberLevel"));
+			m.setMemberName(rs.getString("memberName"));
+			m.setUpdatedate(rs.getString("updatedate"));
+			m.setCreatedate(rs.getString("createdate"));
+			list.add(m);
+		}
+		
+		dbUtil.close(rs, stmt, conn);
+		return list;
 	}
 	
 	// 관리자 : 멤버 강퇴
-	public int deleteMemberByAdmin(Member member) {
-		return 0;
+	public int deleteMemberByAdmin(Member member) throws Exception {
+		int row = 0;
+		// db연결
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		
+		String sql = "DELETE FROM member WHERE member_no = ?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setInt(1, member.getMemberNo());
+		row = stmt.executeUpdate();
+		
+		dbUtil.close(null, stmt, conn);
+		return row;
 	}
 	
 	
+
+	
 	// 로그인
-	public Member login(Member paramMember) throws Exception {
+	public Member login (Member paramMember) throws Exception {
 		// 반환할 Member 변수
 		Member resultMember = null;
 		/*
@@ -59,7 +130,7 @@ public class MemberDao {
 			resultMember = new Member();
 			resultMember.setMemberId(loginRs.getString("memberId"));
 			resultMember.setMemberName(loginRs.getString("memberName"));
-		
+			resultMember.setMemberLevel(loginRs.getInt("memberLevel"));
 		
 			loginRs.close();
 			loginStmt.close();
@@ -98,7 +169,7 @@ public class MemberDao {
 		return result;
 	}
 	
-	// 
+	// 멤버 회원가입
 	public int insertMember(Member member) throws Exception	{
 		int row = 0;
 		
@@ -238,6 +309,77 @@ public class MemberDao {
 		} else {
 			return false;
 		}
+	}
+	
+	// 비밀번호 확인
+	
+	public boolean memberPwck(Member member) throws Exception {
+		boolean result = false;
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		String sql = "SELECT member_name memberName FROM member WHERE member_id=? AND member_pw=PASSWORD(?)";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setString(1, member.getMemberId());
+		stmt.setString(2, member.getMemberPw());
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()){
+			result = true;
+		}
+		
+		dbUtil.close(rs, stmt, conn);
+		return result;
+	}
+		
+	// 회원 정보 조회
+	public Member selectMember(Member paramMember) throws Exception {
+		Member resultMember = null;
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		String sql = null;
+		PreparedStatement stmt = null;
+		sql = "SELECT member_no memberNo, member_id memberId, member_name memberName, updatedate, createdate, member_level memberLevel FROM member WHERE member_no = ?";
+		stmt = conn.prepareStatement(sql);
+		stmt.setInt(1, paramMember.getMemberNo());
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			System.out.println("success");
+			resultMember = new Member(); 
+			resultMember.setMemberNo(rs.getInt("memberNo"));
+			resultMember.setMemberId(rs.getString("memberId"));
+			resultMember.setMemberName(rs.getString("memberName"));
+			resultMember.setUpdatedate(rs.getString("updatedate"));
+			resultMember.setCreatedate(rs.getString("createdate"));
+			resultMember.setMemberLevel(rs.getInt("memberLevel"));
+		}	
+		
+		dbUtil.close(rs, stmt, conn);
+		return resultMember;
+	}
+	
+	// 회원 정보 조회
+	public Member selectMemberInfo(Member paramMember) throws Exception {
+		Member resultMember = null;
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		String sql = null;
+		PreparedStatement stmt = null;
+		sql = "SELECT member_id memberId, member_pw memberPw, member_level memberLevel, member_name memberName FROM member WHERE member_id = ?";
+		stmt = conn.prepareStatement(sql);
+		stmt.setString(1, paramMember.getMemberId());
+		ResultSet rs = stmt.executeQuery();
+		if(rs.next()) {
+			System.out.println("success");
+			resultMember = new Member(); 
+			resultMember.setMemberId(rs.getString("memberId"));
+			resultMember.setMemberPw(rs.getString("memberPw"));
+			resultMember.setMemberLevel(rs.getInt("memberLevel"));
+			resultMember.setMemberName(rs.getString("memberName"));
+		}	
+		
+		dbUtil.close(rs, stmt, conn);
+		return resultMember;
 	
 	}
+
+	
 }

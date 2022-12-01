@@ -6,26 +6,27 @@
 
 <%
 	// Controller
-	// 로긴메서드에서 회원불러오기
-	Member loginMember = (Member)session.getAttribute("login");
-	if(loginMember ==null || loginMember.getMemberLevel() <1 ) {
-		
+	request.setCharacterEncoding("utf-8");
+	
+	Member loginMember = (Member)session.getAttribute("loginMember");
+	
+	System.out.println(loginMember.getMemberId()+"<--중간확인");
+	System.out.println(loginMember.getMemberLevel()+"<--중간확인");
+	
+	if(loginMember == null || loginMember.getMemberLevel() < 1){
 		String msg = URLEncoder.encode("관리자만 접속가능한 페이지입니다", "utf-8");
-		response.sendRedirect(request.getContextPath()+"/loginForm.jsp");
+		response.sendRedirect(request.getContextPath()+"/cash/cashList.jsp?msg="+msg);
 		return;
 	}
+	 
 	
 	// Model 호출
 	NoticeDao noticeDao = new NoticeDao();
-	ArrayList<Notice> list = noticeDao.selectNoticeListByPage (0,0);
-	int noticeCount = noticeDao.selectNoticeCount(); // -> last page
+	MemberDao memberDao = new MemberDao();
 	
-	
-	
-	// 최근공지 5개, 최근멤버 5명
-	
-	
-	// View
+	// 공지 5개, 멤버 5명 (최신업데이트)
+	ArrayList<Notice> NoticeList = noticeDao.selectNoticeListByPage(0,5);
+	ArrayList<Member> MemberList = memberDao.selectMemberListByPage(0,5);
 
 
 
@@ -37,37 +38,66 @@
 <title>admin main</title>
 </head>
 <body>
-	<ul>
-		<li><a href = "<%=request.getContextPath()%>/admin/noticeList.jsp">공지관리</a></li>
-		<li><a href = "<%=request.getContextPath()%>/admin/categoryList.jsp">카테고리관리</a></li>
-		<li><a href = "<%=request.getContextPath()%>/admin/memberList.jsp">멤버관리(목록, 레벨수정, 강제탈퇴)</a></li>
-
-	</ul>
 	<div>
-		<!--  category list -->
-		<h1>공지</h1>
-		<table>
+		<jsp:include page = "/inc/adminUrl.jsp" ></jsp:include>
+	
+	</div>
+	<div>
+		<!--  최근공지목록 -->
+		<h1>최근공지목록</h1>
+		<table border= "1">
 			<tr>
+				<th>번호</th>
 				<th>공지내용</th>
 				<th>공지날짜</th>
-				<th>수정</th>
-				<th>삭제</th>
 			</tr>
 			<%
-				for(Notice n : list) {
+				for(Notice n : NoticeList ) {
 			%>
 			<tr>	
-				<td></td>
-				<td></td>
-				<td></td>
-				<td></td>
+				<td><%=n.getNoticeNo() %></td>
+				<td><%=n.getNoticeMemo() %></td>
+				<td><%=n.getCreatedate() %></td>
+				
 			</tr>
 			<%
 				}
 			%>
-		
+		</table>
+	</div>
+	
+	<div>
+		<!--  최근회원가입목록 -->
+		<h1>신규회원가입멤버</h1>
+		<table>
+			<tr>
+				<th>멤버번호</th>
+				<th>아이디</th>
+				<th>이름</th>
+				<th>회원등급</th>
+				<th>최신수정일자</th>
+				<th>가입날자</th>
+			</tr>
+			<%
+				for(Member m : MemberList) {
+			
+			%>
+			<tr>
+				<td><%=m.getMemberNo() %></td>
+				<td><%=m.getMemberId()%></td>
+				<td><%=m.getMemberName()%></td>
+				<td><%=m.getMemberLevel()%></td>
+				<td><%=m.getUpdatedate() %></td>
+				<td><%=m.getCreatedate() %></td>
+			
+			</tr>
+			
+			<%
+				}
+			%>
 		
 		</table>
+	<a href = "<%=request.getContextPath()%>/logout.jsp">로그아웃</a>
 	</div>
 </body>
 </html>
