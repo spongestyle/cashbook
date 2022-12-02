@@ -7,18 +7,23 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import util.DBUtil;
+import vo.Help;
 
 public class HelpDao {
 	
 	// 관리자 
-	// selectHelpList 오브로딩 (이름이똑같아도 매게변수가 다르면 상관없다.)
+	// selectHelpList 오버로딩 (이름이똑같아도 매게변수가 다르면 상관없다.)
 	public ArrayList<HashMap<String, Object>> selectHelpList(int beginRow, int rowPerPage) throws Exception {
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
 		String sql = "SELECT h.help_no helpNo"
 					+"		, h.help_memo helpMemo"
 					+ "		, h.member_id memberId"
+					+ "		, h.updatedate helpUpdatedate"
 					+"		, h.createdate helpCreatedate"
+					+ "		, c.comment_no commentNo"
 					+"		, c.comment_memo commentMemo"
+					+ "		, c.member_id commentMemberId"
+					+ "		, c.updatedate dommentUpdatedate"
 					+"		, c.createdate commentCreatedate"
 					+" FROM help h LEFT JOIN comment c"
 					+" ON h.help_no = c.help_no"
@@ -32,15 +37,20 @@ public class HelpDao {
 		conn = dbUtil.getConnection();
 		stmt = conn.prepareStatement(sql);
 		stmt.setInt(1, beginRow);
-		stmt.setInt(1, rowPerPage);
+		stmt.setInt(2, rowPerPage);
 		rs = stmt.executeQuery();
 		
 		while(rs.next()) {
 			HashMap<String, Object> m = new HashMap<String, Object>();
 			m.put("helpNo", rs.getInt("helpNo"));
 			m.put("helpMemo", rs.getString("helpMemo"));
+			m.put("helpMemberId", rs.getString("helpMemberId"));
+			m.put("helpUpdatedate", rs.getString("helpUpdatedate"));
 			m.put("helpCreatedate", rs.getString("helpCreatedate"));
+			m.put("commentNo", rs.getInt("commentNo"));
 			m.put("commentMemo", rs.getString("commentMemo"));
+			m.put("commentMemberId", rs.getInt("commentMemberId"));
+			m.put("commentUpdatedate", rs.getString("commentUpdatedate"));
 			m.put("commentCreatedate", rs.getString("commentCreatedate"));
 			list.add(m);
 		}
@@ -50,19 +60,25 @@ public class HelpDao {
 	}
 	
 	
-	// help 리스트
+	// help 리스트 helpList.jsp
 	public ArrayList<HashMap<String, Object>> selectHelpList(String memberId) throws Exception {
 		ArrayList<HashMap<String, Object>> list = new ArrayList<HashMap<String,Object>>();
 		String sql = "SELECT h.help_no helpNo"
-					+"		, h.help_memo helpMemo"
-					+"		, h.createdate helpCreatedate"
-					+"		, c.comment_memo commentMemo"
-					+"		, c.createdate commentCreatedate"
-					+" FROM help h LEFT JOIN comment c"
-					+" ON h.help_no = c.help_no"
-					+" WHERE h.member_id = ?";
+				+ "			, h.help_memo helpMemo"
+				+ "			, h.member_id helpMemberId"
+				+ "			, h.updatedate helpUpdatedate"
+				+ "			, h.createdate helpCreatedate"
+				+ "			, c.comment_no commentNo"
+				+ "			, c.comment_memo commentMemo"
+				+ "			, c.member_id commentMemberId"
+				+ "			, c.updatedate commentUpdatedate"
+				+ "			, c.createdate commentCreatedate"
+				+ " FROM help h LEFT JOIN COMMENT c" //" FROM HELP h LEFT OUTER JOIN COMMENT c"
+				+ " ON h.help_no = c.help_no"
+				+ " WHERE h.member_id = ?";
 		
 		DBUtil dbUtil = new DBUtil();
+		// db자원 초기화
 		Connection conn = null;
 		PreparedStatement stmt = null;
 		ResultSet rs = null;
@@ -76,13 +92,41 @@ public class HelpDao {
 			HashMap<String, Object> m = new HashMap<String, Object>();
 			m.put("helpNo", rs.getInt("helpNo"));
 			m.put("helpMemo", rs.getString("helpMemo"));
+			m.put("helpMemberId", rs.getString("helpMemberId"));
+			m.put("helpUpdatedate", rs.getString("helpUpdatedate"));
 			m.put("helpCreatedate", rs.getString("helpCreatedate"));
+			m.put("commentNo", rs.getInt("commentNo"));
 			m.put("commentMemo", rs.getString("commentMemo"));
+			m.put("commentMemberId", rs.getString("commentMemberId"));
+			m.put("commentUpdatedate", rs.getString("commentUpdatedate"));
 			m.put("commentCreatedate", rs.getString("commentCreatedate"));
 			list.add(m);
 		}
-		
+		// db자원반납
 		dbUtil.close(rs, stmt, conn);
 		return list;
+		
+	}
+	
+	// insertHelpAction.jsp
+	public int insertHelp(Help help) throws Exception { 
+		int row = 0;
+		String sql = "INSERT INTO help (help_memo, member_id, updatedate, createdate)"
+				+ "VALUES(?, ?, NOW(),NOW())";
+		DBUtil dbUtil = new DBUtil();
+		// db자원 초기화
+		Connection conn = null;
+		PreparedStatement stmt = null;
+		
+		conn = dbUtil.getConnection();
+		stmt = conn.prepareStatement(sql);
+		stmt.setString(1, help.getHelpMemo());
+		stmt.setString(2, help.getMemberId());
+		row = stmt.executeUpdate();
+		
+		// db자원반납
+		dbUtil.close(null, stmt, conn);
+		return row;
+
 	}
 }

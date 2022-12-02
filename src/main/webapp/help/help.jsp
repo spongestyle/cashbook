@@ -3,10 +3,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import = "vo.*" %>
 <%@ page import = "dao.*" %>
+<%@ page import="java.net.URLEncoder" %>
 
 <%
 
-
+	//로그인 세션
+	request.setCharacterEncoding("utf-8");
+	
+	Member loginMember = (Member)session.getAttribute("loginMember");
+	
+	if(loginMember == null || loginMember.getMemberLevel() < 1){
+		response.sendRedirect(request.getContextPath()+"/loginForm.jsp?");
+		return;
+	}
 
 	int currentpage = 1;
 	//request.getParameter("currentPage")
@@ -52,15 +61,15 @@
 							<%
 								if(m.get("helpMemo") == null ) {
 							%>
-									<a herf = "<%=request.getContextPath() %>/help/insertCommentForm.jsp?helpNo=<%=m.get(helpNo)%>">
+									<a href = "<%=request.getContextPath() %>/help/insertCommentForm.jsp?helpNo=<%=m.get("helpNo")%>">
 									답변입력</a>
 							<%
 								} else {
 							
 							%>
-									<a herf = "<%=request.getContextPath() %>/help/updateComment.jsp?helpNo=<%=m.get(commentNo)%>">
+									<a href = "<%=request.getContextPath() %>/help/updateComment.jsp?helpNo=<%=m.get("helpNo")%>">
 									수정</a>
-									<a herf = "<%=request.getContextPath() %>/help/deleteComment.jsp?helpNo=<%=m.get(commentNo)%>">
+									<a href = "<%=request.getContextPath() %>/help/deleteComment.jsp?helpNo=<%=m.get("helpNo")%>">
 									삭제</a>
 							<%
 								}
