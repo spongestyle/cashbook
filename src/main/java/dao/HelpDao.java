@@ -129,4 +129,58 @@ public class HelpDao {
 		return row;
 
 	}
+	// SELECT : updateHelpForm.jsp
+	public Help selectHelp(Help help)throws Exception{
+		Help h = null;
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		String sql = "SELECT help_no helpNo, help_memo helpMemo, member_id memberId, updatedate, createdate"
+					+ " FROM help"
+					+ " WHERE help_no=?";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		stmt.setInt(1, help.getHelpNo());
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			h = new Help();
+			h.setHelpNo(rs.getInt("helpNo"));
+			h.setHelpMemo(rs.getString("helpMemo"));
+			h.setMemberId(rs.getString("memberId"));
+			h.setUpdatedate(rs.getString("updatedate"));
+			h.setCreatedate(rs.getString("createdate"));
+		}
+		
+		dbUtil.close(rs, stmt, conn);
+		return h;
+	}
+	
+	// UPDATE : updateHelpAction.jsp
+	public int updateHelp(Help help) throws Exception{
+		int row = 0;
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		String sql = null;
+		PreparedStatement stmt = null;
+		sql = "UPDATE help SET help_memo = ? WHERE help_no= ? ";
+		stmt = conn.prepareStatement(sql);
+		stmt.setString(1, help.getHelpMemo());
+		stmt.setInt(2, help.getHelpNo());
+		row = stmt.executeUpdate();
+		dbUtil.close(null, stmt, conn);
+		return row;
+	}
+	// DELETE : deleteHelpAction.jsp
+		public int deleteHelp(Help help) throws Exception{
+			int row = 0;
+			DBUtil dbUtil = new DBUtil();
+			Connection conn = dbUtil.getConnection();
+			String sql = null;
+			PreparedStatement stmt = null;
+			sql = "DELETE FROM help WHERE help_no = ?";
+			stmt = conn.prepareStatement(sql);
+			stmt.setInt(1, help.getHelpNo());
+			row = stmt.executeUpdate();
+			dbUtil.close(null, stmt, conn);
+			return row;
+		}
+	
 }
