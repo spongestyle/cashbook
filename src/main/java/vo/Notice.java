@@ -2,6 +2,7 @@ package vo;
 
 public class Notice {
 	private int noticeNo;
+	private String memberName;
 	private String noticeMemo;
 	private String updatedate;
 	private String createdate;
@@ -10,6 +11,12 @@ public class Notice {
 	}
 	public void setNoticeNo(int noticeNo) {
 		this.noticeNo = noticeNo;
+	}
+	public String getMemberName() {
+		return memberName;
+	}
+	public void setMemberName(String memberName) {
+		this.memberName = memberName;
 	}
 	public String getNoticeMemo() {
 		return noticeMemo;

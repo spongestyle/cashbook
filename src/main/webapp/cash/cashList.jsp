@@ -86,6 +86,48 @@
 <head>
 <meta charset="UTF-8">
 <title>cashList</title>
+		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
+		<script type="text/javascript">
+			<%
+			if(request.getParameter("msg") != null) {         
+				%>   
+				alert("<%=request.getParameter("msg")%>");
+				<%   
+			}
+			%>
+		</script>
+		<style>
+			body {
+				padding: 4.5em;
+				background: #f5f5f5
+			}
+			table {
+			 	border: 1px #a39485 solid;
+				font-size: .9em;
+				box-shadow: 0 2px 5px rgba(0,0,0,.25);
+				border-collapse: collapse;
+				border-radius: 5px;
+				margin-left: auto; 
+				margin-right: auto;
+			}
+			a {
+				text-decoration : none;
+			}
+			button {
+				border: 0;
+			}
+			textarea {
+				border: 0.5px #a39485 solid;
+				font-size: .9em;
+				outline: none;
+				padding-left: 10px;
+				width: 100%;
+			}
+			input {
+				width: 100%;
+			}
+		</style>
 </head>
 <body>
 	<div>
@@ -104,7 +146,7 @@
 	</div>
 	<div>
 			<!-- 달력 -->
-		<table border="1">
+		<table>
 			<tr>
 				<th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
 			</tr>

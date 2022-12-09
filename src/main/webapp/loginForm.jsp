@@ -18,9 +18,23 @@
 	if(request.getParameter("currentPage") != null){
 		currentPage = Integer.parseInt(request.getParameter("currentPage"));
 	}
-	int rowPerPage = 5;
-	int beginRow= (currentPage-1)*rowPerPage;
-	int lastPage = (int)Math.ceil(noticeDao.selectNoticeCount()/(double)rowPerPage);
+	final int rowPerPage = 5; // 한 페이지당 보여주는 게시글(행) 수
+	int beginRow= (currentPage-1)*rowPerPage; //쿼리에 작성할 게시글(행)시작 값
+	int cnt = noticeDao.selectNoticeCount(); //전체 행 구하기
+	
+	final int pageCount = 10; // 한 페이지당 보여줄 페이징 목록 수
+	int beginPage = (currentPage-1)/pageCount*pageCount+1; //페이징 목록 시작값
+	int endPage = beginPage+pageCount-1; // 페이징 목록 끝값
+	
+		
+	int lastPage = cnt/rowPerPage; // 마지막 페이지
+	if(lastPage%rowPerPage != 0){
+		lastPage++;
+	}
+	if(endPage > lastPage){ // 페이지 목록이 lastPage까지만 보이도록
+		endPage = lastPage;
+	}
+	
 	//디버깅
 	System.out.println(lastPage);	
 	
@@ -33,16 +47,12 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<!-- Bootstrap -->
+	
+    
+    <!-- Bootstrap -->
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
-	<style>
-		th.green { background: rgba(0, 128, 0, 0.1); }
-		
-		td.green { background: rgba(0, 128, 0, 0.1); }
-		
-		table { background: rgb(238, 238, 255);}
-	</style>
+	
 	<script type="text/javascript">
 	<%
 		if(request.getParameter("msg") != null)
@@ -64,9 +74,11 @@
 
 	
 	<!-- 공지(5개) 페이징 -->
-	<div class = "container mt-3" style= "width:400px;">
-		<table class = "table">
+	<div class = >
+		<table>
 			<tr>
+				<th>게시번호</th>
+				<th>게시자</th>
 				<th>공지내용</th>
 				<th>공지날짜</th>
 			</tr>
@@ -74,6 +86,8 @@
 				for (Notice n : list) {
 			%>
 					<tr>
+						<td><%=n.getNoticeNo() %></td>
+						<td><%=n.getMemberName() %></td>
 						<td><%=n.getNoticeMemo()%></td>
 						<td><%=n.getCreatedate()%></td>
 					</tr>
@@ -84,23 +98,31 @@
 			
 		</table>
 		
-		<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=1">처음</a>
-		<%
-			if(currentPage > 1){
-		%>
-				<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=<%=currentPage-1%>">이전</a>
-		<%
-			}
-		%>
-		<span><%=currentPage%></span>
-		<%
-			if(currentPage < lastPage){
-		%>
-				<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=<%=currentPage+1%>">다음</a>
-		<%
-			}
-		%>
-		<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=<%=lastPage%>">마지막</a>
+		<!--  페이징  -->
+		
+		<ul style="list-style: none;">				
+			<li>
+				<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=1">처음</a>
+			<%
+				if(currentPage > 1){
+			%>
+					<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=<%=currentPage-1%>">이전</a>
+			<%
+				}
+				for(int i=beginPage; i<=endPage; i++){
+			%>
+					<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=<%=i%>"><%=i%></a>
+			<%	
+				}
+				if(currentPage < lastPage){
+			%>
+					<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=<%=currentPage+1%>">다음</a>
+			<%
+				}
+			%>
+				<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=<%=lastPage%>">마지막</a>	
+			</li>
+		</ul>
 
 	</div>
 

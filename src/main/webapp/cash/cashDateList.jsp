@@ -14,6 +14,7 @@
 		return;
 	}
 	
+	
 	// 현재 로그인한 사람 세션
 	Member loginMember = (Member)session.getAttribute("loginMember");
 	String loginMemberId = loginMember.getMemberId();
