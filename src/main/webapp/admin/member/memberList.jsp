@@ -10,8 +10,7 @@
 	//로그인 세션
 	Member loginMember = (Member)session.getAttribute("loginMember");
 	
-	System.out.println(loginMember.getMemberId()+"<--중간확인");
-	System.out.println(loginMember.getMemberLevel()+"<--중간확인");
+	
 	
 	if(loginMember == null || loginMember.getMemberLevel() < 1){
 		response.sendRedirect(request.getContextPath()+"/loginForm.jsp");
@@ -75,7 +74,7 @@
 			</tr>
 			<%
 				for(Member m : list){
-				%>
+			%>
 					<tr>
 						<td><%=m.getMemberNo()%></td>
 						<td><%=m.getMemberId()%></td>
@@ -86,7 +85,7 @@
 						<td><a href="<%=request.getContextPath()%>/admin/member/updateMemberForm.jsp?memberNo=<%=m.getMemberNo()%>">수정</a></td>
 						<td><a href="<%=request.getContextPath()%>/admin/member/deleteMemberForm.jsp?memberNo=<%=m.getMemberNo()%>">강제탈퇴</a></td>
 					</tr>
-				<%				
+			<%				
 				}
 			%>
 

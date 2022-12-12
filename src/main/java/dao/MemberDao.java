@@ -80,6 +80,31 @@ public class MemberDao {
 		return list;
 	}
 	
+	// inex : 멤버리스트
+	public ArrayList<Member> selectMemberList() throws Exception {
+		ArrayList<Member> list = new ArrayList<Member>();
+		// db연결
+		DBUtil dbUtil = new DBUtil();
+		Connection conn = dbUtil.getConnection();
+		
+		String sql = "SELECT member_no memberNo, member_id memberId, member_level memberLevel, member_name memberName, updatedate, createdate"
+				+ " FROM member ORDER BY createdate DESC"
+				+ " LIMIT 5;";
+		PreparedStatement stmt = conn.prepareStatement(sql);
+		ResultSet rs = stmt.executeQuery();
+		while(rs.next()) {
+			Member m = new Member();
+			m.setMemberLevel(rs.getInt("memberLevel"));
+			m.setMemberName(rs.getString("memberName"));
+			m.setCreatedate(rs.getString("createdate"));
+			list.add(m);
+		}
+		
+		dbUtil.close(rs, stmt, conn);
+		return list;
+	}
+	
+	
 	// 관리자 : 멤버 강퇴
 	public int deleteMemberByAdmin(Member member) throws Exception {
 		int row = 0;

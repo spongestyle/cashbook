@@ -2,7 +2,6 @@
 <%@ page import = "dao.*" %>
 <%@ page import = "vo.*" %>
 <%@ page import = "java.util.*" %>
-
 <%
 //1
 	if(session.getAttribute("loginMember") != null) {
@@ -11,160 +10,122 @@
 		return;
 	}
 	
-	//페이징
-	NoticeDao noticeDao = new NoticeDao();
-	
-	int currentPage = 1;
-	if(request.getParameter("currentPage") != null){
-		currentPage = Integer.parseInt(request.getParameter("currentPage"));
-	}
-	final int rowPerPage = 5; // 한 페이지당 보여주는 게시글(행) 수
-	int beginRow= (currentPage-1)*rowPerPage; //쿼리에 작성할 게시글(행)시작 값
-	int cnt = noticeDao.selectNoticeCount(); //전체 행 구하기
-	
-	final int pageCount = 10; // 한 페이지당 보여줄 페이징 목록 수
-	int beginPage = (currentPage-1)/pageCount*pageCount+1; //페이징 목록 시작값
-	int endPage = beginPage+pageCount-1; // 페이징 목록 끝값
-	
-		
-	int lastPage = cnt/rowPerPage; // 마지막 페이지
-	if(lastPage%rowPerPage != 0){
-		lastPage++;
-	}
-	if(endPage > lastPage){ // 페이지 목록이 lastPage까지만 보이도록
-		endPage = lastPage;
-	}
-	
-	//디버깅
-	System.out.println(lastPage);	
-	
-	ArrayList<Notice> list = noticeDao.selectNoticeListByPage(beginRow, rowPerPage);
 
 
 
 
 %>
+
 <!DOCTYPE html>
-<html>
-<head>
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>LoginForm</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="./assets/css/tailwind.output.css" />
+    <script
+      src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
+      defer
+    ></script>
+    <script src="./assets/js/init-alpine.js"></script>
+  </head>
+  <body>
+    <div class="flex items-center min-h-screen p-6 bg-gray-50 dark:bg-gray-900">
+      <div
+        class="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl dark:bg-gray-800"
+      >
+        <div class="flex flex-col overflow-y-auto md:flex-row">
+          <div class="h-32 md:h-auto md:w-1/2">
+            <img
+              aria-hidden="true"
+              class="object-cover w-full h-full dark:hidden"
+              src="./assets/img/login-office.jpeg"
+              alt="Office"
+            />
+            <img
+              aria-hidden="true"
+              class="hidden object-cover w-full h-full dark:block"
+              src="./assets/img/login-office-dark.jpeg"
+              alt="Office"
+            />
+          </div>
+          
+          <!-- 로그인폼 -->
+          
+          <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
+            <div class="w-full">
+              <form  method="post" action="<%=request.getContextPath()%>/loginAction.jsp">
+	              <h1
+	                class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
+	                Login
+	              </h1>
+	              <label class="block text-sm">
+	                <span class="text-gray-700 dark:text-gray-400">ID</span>
+	                <input
+	                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+	                  placeholder="id"
+	                  name = "memberId"
+	                />
+	              </label>
+	              <label class="block mt-4 text-sm">
+	                <span class="text-gray-700 dark:text-gray-400">Password</span>
+	                <input
+	                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
+	                  placeholder="password"
+	                  type="password"
+	                  name = "memberPw"
+	                />
+	              </label>
 	
-    
-    <!-- Bootstrap -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
-	
-	<script type="text/javascript">
-	<%
-		if(request.getParameter("msg") != null)
-		{			
-	%>	
-			alert("<%=request.getParameter("msg")%>");
-	<%	
-		}
-	%>
-	</script>	
-<meta charset="UTF-8">
-<title>로그인</title>
-</head>
-<body>
+	           <a
+                class="block w-full px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-lg active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple">
+              	<button type = "submit">
+              		login
+              	</button>
+              </a>
+				</form>
+              <hr class="my-8" />
 
-	<div>
-		<a href = "<%=request.getContextPath()%>/admin/notice/noticeList.jsp">게시판관리자</a>
-	</div>	
-
-	
-	<!-- 공지(5개) 페이징 -->
-	<div class = >
-		<table>
-			<tr>
-				<th>게시번호</th>
-				<th>게시자</th>
-				<th>공지내용</th>
-				<th>공지날짜</th>
-			</tr>
-			<%
-				for (Notice n : list) {
-			%>
-					<tr>
-						<td><%=n.getNoticeNo() %></td>
-						<td><%=n.getMemberName() %></td>
-						<td><%=n.getNoticeMemo()%></td>
-						<td><%=n.getCreatedate()%></td>
-					</tr>
-					 
-			<%
-				}
-			%>
-			
-		</table>
-		
-		<!--  페이징  -->
-		
-		<ul style="list-style: none;">				
-			<li>
-				<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=1">처음</a>
-			<%
-				if(currentPage > 1){
-			%>
-					<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=<%=currentPage-1%>">이전</a>
-			<%
-				}
-				for(int i=beginPage; i<=endPage; i++){
-			%>
-					<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=<%=i%>"><%=i%></a>
-			<%	
-				}
-				if(currentPage < lastPage){
-			%>
-					<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=<%=currentPage+1%>">다음</a>
-			<%
-				}
-			%>
-				<a href="<%=request.getContextPath()%>/loginForm.jsp?currentPage=<%=lastPage%>">마지막</a>	
-			</li>
-		</ul>
-
-	</div>
-
-
-
-	<!-- 로그인 폼 -->
-	<div class = "container mt-3" style= "width:400px;">
-	<div>
-		<%
-			if(request.getParameter("msg2") != null){
-		%>
-			<span><%=request.getParameter("msg2") %></span>
-		<%
-			}
-		%>
-	
-	</div>
-
-		<form method="post" action="<%=request.getContextPath()%>/loginAction.jsp">
-			<h2>로그인하기</h2>
-			<table class = "table">					
-				<tr>
-					<td>아이디</td>
-					<td>
-						<input type="text" name="memberId" placeholder="ID">
-					</td>
-				</tr>
-				<tr>
-					<td>비밀번호</td>
-					<td>
-						<input type="password" name="memberPw" placeholder="PASSWORD">
-					</td>
-				</tr>				
-			</table>
-			<button type="submit">로그인</button>
-		</form>
-	
-		<div>
-			<span>회원가입 하러가기 &#8702;</span>
-			<a href="<%=request.getContextPath()%>/insertMemberForm.jsp">회원가입</a>
-		</div>
-	</div>
-	
-</body>
+              <button
+                class="flex items-center justify-center w-full px-4 py-2 text-sm font-medium leading-5 text-white text-gray-700 transition-colors duration-150 border border-gray-300 rounded-lg dark:text-gray-400 active:bg-transparent hover:border-gray-500 focus:border-gray-500 active:text-gray-500 focus:outline-none focus:shadow-outline-gray"
+              >
+                <svg
+                  class="w-4 h-4 mr-2"
+                  aria-hidden="true"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                >
+                  <path
+                    d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"
+                  />
+                </svg>
+                Github
+              </button>
+             
+              <p class="mt-4">
+                <a
+                  class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
+                  href="./forgot-password.html"
+                >
+                  Forgot your password?
+                </a>
+              </p>
+              <p class="mt-1">
+                <a
+                  class="text-sm font-medium text-purple-600 dark:text-purple-400 hover:underline"
+                  href="./create-account.html"
+                >
+                  Create account
+                </a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
 </html>

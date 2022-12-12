@@ -6,7 +6,17 @@
 	
 
 
-
+	// 로그인 멤버
+	// 로그인을 안해도 index창에 남게 하기 ????
+	if(session.getAttribute("loginMember") == null){
+		response.sendRedirect(request.getContextPath()+"/index.jsp");
+		return;
+	}
+	
+	Member loginMember = (Member)session.getAttribute("loginMember");
+	String loginMemberId = loginMember.getMemberId();
+	String loginMemberName = loginMember.getMemberName();
+	
 
 
 	// 공지사항 목록페이징
@@ -133,7 +143,7 @@
             <li class="relative px-6 py-3">
               <a
                 class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                href="<%=request.getContextPath()%>/cash/cashList.jsp"
+                href="forms.html"
               >
                 <svg
                   class="w-5 h-5"
@@ -157,7 +167,7 @@
             <li class="relative px-6 py-3">
               <a
                 class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
-                href="<%=request.getContextPath() %>/help/helpList.jsp"
+                href="buttons.html"
               >
                 <svg
                   class="w-5 h-5"
@@ -177,7 +187,6 @@
               </a>
             </li>
           
-            
             
             <li class="relative px-6 py-3">
               <button
@@ -409,7 +418,7 @@
                             d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
                           ></path>
                         </svg>
-                        <span>  </span>
+                        <span> <%=loginMemberName %>님</span>
                       </a>
                     </li>
                     <li class="flex">

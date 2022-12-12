@@ -4,6 +4,6 @@
 	session.invalidate(); 
 
 	//로그인 폼으로 돌아가기
-	response.sendRedirect(request.getContextPath()+"/loginForm.jsp");	
+	response.sendRedirect(request.getContextPath()+"/index.jsp");	
 %>
 ​
