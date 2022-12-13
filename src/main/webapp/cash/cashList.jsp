@@ -82,13 +82,33 @@
 
 
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
-<title>cashList</title>
-		<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
-		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
-		<script type="text/javascript">
+	
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Windmill Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/tailwind.output.css" />
+    <script
+      src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
+      defer
+    ></script>
+    <script src="../assets/js/init-alpine.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+      defer
+    ></script>
+    <script src="../assets/js/charts-lines.js" defer></script>
+    <script src="../assets/js/charts-pie.js" defer></script>
+    <script type="text/javascript">
 			<%
 			if(request.getParameter("msg") != null) {         
 				%>   
@@ -96,128 +116,106 @@
 				<%   
 			}
 			%>
-		</script>
-		<style>
-			body {
-				padding: 4.5em;
-				background: #f5f5f5
-			}
-			table {
-			 	border: 1px #a39485 solid;
-				font-size: .9em;
-				box-shadow: 0 2px 5px rgba(0,0,0,.25);
-				border-collapse: collapse;
-				border-radius: 5px;
-				margin-left: auto; 
-				margin-right: auto;
-			}
-			a {
-				text-decoration : none;
-			}
-			button {
-				border: 0;
-			}
-			textarea {
-				border: 0.5px #a39485 solid;
-				font-size: .9em;
-				outline: none;
-				padding-left: 10px;
-				width: 100%;
-			}
-			input {
-				width: 100%;
-			}
-		</style>
-</head>
+	</script>
+	<style>
+		
+	</style>
+  </head>
 <body>
-	<div>
-		<a href = "<%=request.getContextPath()%>/admin/adminMain.jsp">관리자페이지</a>
-	</div>	
-
-
-	<div>
-	   <!-- 로그인 정보(세션 loginMember 변수) 출력 -->
-	   <span><%=loginMemberName%>님의 가계부</span>
-	   <a href = "<%=request.getContextPath()%>/updateMemberPw.jsp">비밀번호 수정</a>
-	</div>
-	
-	<div>
-		<%=year%>년 <%=month+1%> 월
-	</div>
-	<div>
-			<!-- 달력 -->
-		<table>
-			<tr>
-				<th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
-			</tr>
-			<tr>
-				<%
-					for(int i=1; i<=totalTd; i++) {
-				%>
-						<td>
-				<%
-							int date = i-beginBlank;
-							if(date > 0 && date <= lastDate) {
-				%>
-								<div><a href = "<%=request.getContextPath()%>/cash/cashDateList.jsp?year=<%=year%>&month=<%=month+1%>%date<%=date%>">
-										<%=date %>
-									</a></div>
-								<div>
+   <div
+      class="flex h-screen bg-gray-50 dark:bg-gray-900"
+      :class="{ 'overflow-hidden': isSideMenuOpen }"
+    >
+    	<!--  aside.jsp -->
+		
+		<jsp:include page = "/inc/aside.jsp" ></jsp:include>
+		
+		
+		<!-- backdrop -->
+		<div class="flex flex-col flex-1 w-full">
+		
+			<!--  header.jsp  -->
+		
+			<jsp:include page = "/inc/header.jsp" ></jsp:include>
+			
+			<!-- 알맹이 -->
+			<main class="h-full overflow-y-auto">
+				<div class="container px-6 mx-auto grid">
+          		<!-- main.jsp -->
+          			<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+						<%=loginMemberName%>님의 가계부
+					</h2>
+				<jsp:include page = "/inc/main.jsp" ></jsp:include>
+				
+          	
+          		<!--  table  -->
+          		<!--  달력  -->
+          			<div class="w-full overflow-hidden rounded-lg shadow-xs">
+          				<table>
+							<tr>
+								<th>일</th><th>월</th><th>화</th><th>수</th><th>목</th><th>금</th><th>토</th>
+							</tr>
+							<tr>
 								<%
-									for (HashMap<String, Object> m :list) {
-										String cashDate = (String)(m.get("cashDate"));
-										if(Integer.parseInt(cashDate.substring(8)) == date ){
+									for(int i=1; i<=totalTd; i++) {
 								%>
-										[<%=(String)(m.get("categoryKind"))%>]																
-										<%=(String)(m.get("categoryName"))%>
-										&nbsp;
-										<%=(long)(m.get("cashPrice"))%>원	
-										<br>
+										<td>
 								<%
+											int date = i-beginBlank;
+											if(date > 0 && date <= lastDate) {
+								%>
+												<div><a href = "<%=request.getContextPath()%>/cash/cashDateList.jsp?year=<%=year%>&month=<%=month+1%>%date<%=date%>">
+														<%=date %>
+													</a></div>
+												<div>
+												<%
+													for (HashMap<String, Object> m :list) {
+														String cashDate = (String)(m.get("cashDate"));
+														if(Integer.parseInt(cashDate.substring(8)) == date ){
+												%>
+														[<%=(String)(m.get("categoryKind"))%>]																
+														<%=(String)(m.get("categoryName"))%>
+														&nbsp;
+														<%=(long)(m.get("cashPrice"))%>원	
+														<br>
+												<%
+														}
+													}
+												%>
+												
+												
+												</div>
+								<%            
+									}
+								%>
+										</td>
+								<%
+				
+									if(i % 7 == 0 && i != lastDate){
+								%>
+										</tr><tr> <!-- td7개 만들고 테이블 줄바꿈 -->
+								<%         
 										}
 									}
 								%>
 								
-								
-								</div>
-				<%            
-					}
-				%>
-						</td>
-				<%
-				
-				if(i % 7 == 0 && i != lastDate){
-				%>
-						</tr><tr> <!-- td7개 만들고 테이블 줄바꿈 -->
-				<%         
-						}
-					}
-				%>
-				
-			</tr>
-		   
-
-		</table>
-		<div>
-			 <a href="<%=request.getContextPath()%>/cash/cashList.jsp?year=<%=year%>&month=<%=month-1%>">&#8701;이전달</a>
-			 <%=year%>년 <%=month+1%> 월
-			 <a href="<%=request.getContextPath()%>/cash/cashList.jsp?year=<%=year%>&month=<%=month+1%>">다음달&#8702;</a>
-		</div>
-		<div>
-			<a href = "<%=request.getContextPath()%>/logout.jsp">로그아웃</a>
-			<%
-				if(loginMember.getMemberLevel() > 0 ) {
-			%>
-					<a href="<%=request.getContextPath()%>/admin/adminMain.jsp">관리자 페이지</a>
-			<%
-			
-				}
-			%>
-		</div>
-	</div>
-	<div>
-		<jsp:include page = "/inc/footer.jsp" ></jsp:include>
+							</tr>
+						</table>
+          				<div>
+						 <a href="<%=request.getContextPath()%>/cash/cashList.jsp?year=<%=year%>&month=<%=month-1%>">&#8701;이전달</a>
+						 <%=year%>년 <%=month+1%> 월
+						 <a href="<%=request.getContextPath()%>/cash/cashList.jsp?year=<%=year%>&month=<%=month+1%>">다음달&#8702;</a>
+						</div>
+			          	
+          	
+          	
+          			</div>
+          		</div>
+			</main>
 	
+		</div>
 	</div>
+	
+
 </body>
 </html>
