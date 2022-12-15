@@ -14,13 +14,10 @@
           </a>
           <ul class="mt-6">
             <li class="relative px-6 py-3">
-              <span
-                class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
-                aria-hidden="true"
-              ></span>
+             
               <a
                 class="inline-flex items-center w-full text-sm font-semibold text-gray-800 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200 dark:text-gray-100"
-                href="index.jsp"
+                href="<%=request.getContextPath()%>/index.jsp"
               >
                 <svg
                   class="w-5 h-5"
@@ -42,6 +39,10 @@
           </ul>
           <ul>
             <li class="relative px-6 py-3">
+            <span
+			  class="absolute inset-y-0 left-0 w-1 bg-purple-600 rounded-tr-lg rounded-br-lg"
+			  aria-hidden="true"
+			></span>
               <a
                 class="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                 href="<%=request.getContextPath()%>/cash/cashList.jsp"
@@ -145,28 +146,28 @@
                   <li
                     class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                   >
-                    <a class="w-full" href="">
+                    <a class="w-full" href="<%=request.getContextPath()%>/admin/notice/noticeList.jsp">
                      Notice
                     </a>
                   </li>
                   <li
                     class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                   >
-                    <a class="w-full" href="">
+                    <a class="w-full" href="<%=request.getContextPath()%>/admin/member/memberList.jsp">
                      Member
                     </a>
                   </li>
                   <li
                     class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                   >
-                    <a class="w-full" href="">
+                    <a class="w-full" href="<%=request.getContextPath()%>/admin/category/categoryList.jsp">
                      Category
                     </a>
                   </li>
                   <li
                     class="px-2 py-1 transition-colors duration-150 hover:text-gray-800 dark:hover:text-gray-200"
                   >
-                    <a class="w-full" href="">
+                    <a class="w-full" href="<%=request.getContextPath()%>/admin/comment/commentList.jsp">
                      Comment
                     </a>
                   </li>
@@ -191,3 +192,8 @@
         </div>
       </aside>
       
+
+
+
+
+	

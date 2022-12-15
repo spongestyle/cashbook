@@ -128,7 +128,7 @@
     >
     	<!--  aside.jsp -->
 		
-		<jsp:include page = "/inc/aside.jsp" ></jsp:include>
+		<jsp:include page = "/inc/asideCashbook.jsp" ></jsp:include>
 		
 		
 		<!-- backdrop -->
@@ -214,6 +214,7 @@
 			</main>
 	
 		</div>
+		
 	</div>
 	
 
