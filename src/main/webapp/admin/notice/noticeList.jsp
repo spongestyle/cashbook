@@ -38,75 +38,80 @@
 
 
 <!DOCTYPE html>
-<html>
-<head>
-<meta charset="UTF-8">
+<html :class="{ 'theme-dark': dark }" x-data="data()" lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Windmill Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../assets/css/tailwind.output.css" />
+    <script
+      src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js"
+      defer
+    ></script>
+    <script src="../assets/js/init-alpine.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.css"
+    />
+    <script
+      src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.3/Chart.min.js"
+      defer
+    ></script>
+    <script src="../assets/js/charts-lines.js" defer></script>
+    <script src="../assets/js/charts-pie.js" defer></script>
+    
+    <style>
+    
+    .button {
+   	 float : right;
+    }
+    
+    </style>
 <title>Insert title here</title>
 </head>
 <body>
 
-	
-	<!-- 어드민관리목록 -->
-	<div>
-		<jsp:include page = "/inc/adminUrl.jsp" ></jsp:include>
-	
-	</div>
-	<!-- 공지목록 페이징 (상세보기 없음 타이틀만 보이게, 댓글 기능) -->
-	<div>
-		<h3><strong>★공지사항★</strong></h3>
-
-		<table border="1">
-			<tr>
-				<th>공지번호</th>
-				<th>내용</th>
-				<th>날짜</th>
-				<th>편집</th>
-			</tr>
-			<%
-				for(Notice n : list){
-			%>
-					<tr>
-						<td><%=n.getNoticeNo()%></td>
-						<td><%=n.getNoticeMemo()%></td>
-						<td><%=n.getCreatedate()%></td>
-						<td>
-							<a href="<%=request.getContextPath()%>/admin/notice/updateNoticeForm.jsp?noticeNo=<%=n.getNoticeNo()%>&currentPage=<%=currentPage%>">수정</a>
-							<a href="<%=request.getContextPath()%>/admin/notice/deleteNoticeAction.jsp?noticeNo=<%=n.getNoticeNo()%>&currentPage=<%=currentPage%>">삭제</a>
-						</td>
-					</tr>
-			<%
-				}
-			%>
-
-		</table>
+	<div
+      class="flex h-screen bg-gray-50 dark:bg-gray-900"
+      :class="{ 'overflow-hidden': isSideMenuOpen }"
+    >
+    	<!--  aside.jsp -->
 		
-		<!-- 공지사항 페이징 -->
-		<a href="<%=request.getContextPath()%>/admin/notice/noticeList.jsp?currentPage=1" style="text-decoration: none;">처음</a>
-			<%
-				if(currentPage > 1) {
-			%>
-					<a href="<%=request.getContextPath()%>/admin/notice/noticeList.jsp?currentPage=<%=currentPage-1%>" style="text-decoration: none;">이전</a>
-			<%
-				}
-			%>
-			<span><%=currentPage%></span>
-			<%
-				if(currentPage < lastPage){
-			%>
-					<a href="<%=request.getContextPath()%>/admin/notice/noticeList.jsp?currentPage=<%=currentPage+1%>" style="text-decoration: none;">다음</a>
-			<%		
-				}
-			%>
-		<a href="<%=request.getContextPath()%>/admin/notice/noticeList.jsp?currentPage=<%=lastPage%>" style="text-decoration: none;">마지막</a>
+		<jsp:include page = "/inc/asideHelp.jsp" ></jsp:include>
 		
 		
+		<!-- backdrop -->
+		<div class="flex flex-col flex-1 w-full">
 		
+			<!--  header.jsp  -->
 		
-		
-		
-		<div>
-			<a href = "<%=request.getContextPath()%>/admin/notice/insertNoticeForm.jsp">공지입력하기</a>
+			<jsp:include page = "/inc/header.jsp" ></jsp:include>
+			
+			<!-- 알맹이 -->
+			<main class="h-full overflow-y-auto">
+				<div class="container px-6 mx-auto grid">
+          		<!-- main.jsp -->
+          			<h2 class="my-6 text-2xl font-semibold text-gray-700 dark:text-gray-200">
+						고객센터
+					</h2>
+				<jsp:include page = "/inc/main.jsp" ></jsp:include>
+				
+				
+				
+				
+				
+				
+				
+				
+				
+				</div>
+			</main>
 		</div>
 	</div>
+				
 </body>
 </html>
