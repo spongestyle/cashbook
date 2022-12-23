@@ -437,11 +437,26 @@
 					<!--  숫자 -->	
                       <li>
                       	<a href="<%=request.getContextPath()%>/index.jsp?currentPage=<%=i%>">
-	                        <button
-	                          class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
-	                        >
-	                          <%=i%>
-                        	</button>
+	                        <%
+                      		if (currentPage != i) {
+	                      	%>
+	                      		<button
+		                          class="px-3 py-1 rounded-md focus:outline-none focus:shadow-outline-purple"
+		                        >
+		                          <%=i%>
+	                        	</button>
+	                      	<%
+	                      		} else{
+	                      	%>
+	                      		<button
+		                          class="px-3 py-1 text-white transition-colors duration-150 bg-purple-600 border border-r-0 border-purple-600 rounded-md focus:outline-none focus:shadow-outline-purple"
+		                        >
+		                          <%=i%>
+	                        	</button>
+	                      	<%
+	                      		}
+	                      	%>
+	                  
                         </a>	
                       </li>
                       

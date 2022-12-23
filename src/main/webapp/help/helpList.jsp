@@ -288,7 +288,7 @@
                 >
                   문의하기
                 </button>
-              </div>
+            </div>
           </div>
 		</main>
 	
